@@ -81,5 +81,10 @@ namespace Note_Taking_WinForms
             string json = JsonSerializer.Serialize(allNotes, options);
             File.WriteAllText(fileName, json);
         }
+
+        public void GetMessage()
+        {
+            Console.WriteLine("Message");
+        }
     }
 }
