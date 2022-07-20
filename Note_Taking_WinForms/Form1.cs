@@ -139,6 +139,7 @@ namespace Note_Taking_WinForms
 
         private void Fields_SelectedIndexChanged(object sender, EventArgs e)
         {
+
             if(Fields.SelectedIndex == 0)
                 ShowNotes(types[Fields.SelectedTab.Text]);
             else
