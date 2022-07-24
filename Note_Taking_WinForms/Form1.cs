@@ -57,7 +57,7 @@ namespace Note_Taking_WinForms
 
             if ((sender as Button).Text == "Добавить")
             {
-                moveForm = new MoveWithNoteForm(new Note(), ActionType.Add);
+                moveForm = new MoveWithNoteForm(new Note(), ActionType.Add, types.Keys.ToList());
 
                 if (moveForm.ShowDialog() == DialogResult.OK)
                 {
@@ -69,12 +69,14 @@ namespace Note_Taking_WinForms
             }
             else if ((sender as Button).Text == "Просмотр" && listBox.SelectedItem != null)
             {
-                moveForm = new MoveWithNoteForm(data.GetNoteByName(listBox.SelectedItem.ToString()), ActionType.Show);
+                moveForm = new MoveWithNoteForm(data.GetNoteByName(listBox.SelectedItem.ToString()), ActionType.Show
+                    , types.Keys.ToList());
                 moveForm.ShowDialog();
             }   
             else if ((sender as Button).Text == "Изменить")
             {
-                moveForm = new MoveWithNoteForm(data.GetNoteByName(listBox.SelectedItem.ToString()), ActionType.Change);
+                moveForm = new MoveWithNoteForm(data.GetNoteByName(listBox.SelectedItem.ToString()), ActionType.Change,
+                    types.Keys.ToList());
 
                 if (moveForm.ShowDialog() == DialogResult.OK)
                 {
@@ -136,12 +138,10 @@ namespace Note_Taking_WinForms
                                     where type == 1 || types[note.Type] == type
                                     select note.Name.ToString()).ToArray());
         }
-
         
 
         private void Fields_SelectedIndexChanged(object sender, EventArgs e)
         {
-
             if ((sender as TabControl).SelectedTab.Text == "+")
             {
                 AddNewTab addNewTab = new AddNewTab();

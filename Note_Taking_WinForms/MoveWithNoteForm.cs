@@ -14,9 +14,11 @@ namespace Note_Taking_WinForms
     {
         public Note newNote;
 
-        public MoveWithNoteForm(Note note, MainForm.ActionType mode)
+        public MoveWithNoteForm(Note note, MainForm.ActionType mode, List<string> types)
         {
             InitializeComponent();
+
+            AddTypes(types);
 
             newNote = note;
             NameTextBox.Text = note.Name;
@@ -35,6 +37,14 @@ namespace Note_Taking_WinForms
                 OkButton.Text = "Добавить";
             else if (mode == MainForm.ActionType.Change)
                 OkButton.Text = "Изменить";
+        }
+
+        private void AddTypes(List<string> types)
+        {
+            TypeBox.Items.Add("");
+            TypeBox.Items.AddRange((from type in types
+                                    where type != "Все" && type != "Без темы" 
+                             select type).ToArray());
         }
 
         private void ExitClick(object sender, EventArgs e)

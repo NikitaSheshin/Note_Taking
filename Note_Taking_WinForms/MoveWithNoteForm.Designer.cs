@@ -90,10 +90,6 @@
             // 
             this.TypeBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.TypeBox.FormattingEnabled = true;
-            this.TypeBox.Items.AddRange(new object[] {
-            "Работа",
-            "Покупки",
-            "Дом"});
             this.TypeBox.Location = new System.Drawing.Point(155, 177);
             this.TypeBox.Name = "TypeBox";
             this.TypeBox.Size = new System.Drawing.Size(172, 24);
