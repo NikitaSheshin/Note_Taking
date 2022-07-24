@@ -48,7 +48,7 @@ namespace Note_Taking_WinForms
 
         private ListBox GetCurrentListBox(int index)
             => (ListBox)Controls.Find("listBox" + index, true)[0];
-        
+
 
         private void MoveWithNote(object sender, EventArgs e)
         {
@@ -137,13 +137,40 @@ namespace Note_Taking_WinForms
                                     select note.Name.ToString()).ToArray());
         }
 
+        
+
         private void Fields_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(Fields.SelectedIndex == 0)
-                ShowNotes(types[Fields.SelectedTab.Text]);
+
+            if ((sender as TabControl).SelectedTab.Text == "+")
+            {
+                AddNewTab addNewTab = new AddNewTab();
+
+                if (addNewTab.ShowDialog() == DialogResult.OK)
+                {
+                    TabPage tabPage = new TabPage();
+                    tabPage.Text = "+";
+
+                    ListBox listBox = new ListBox();
+                    listBox.SelectedIndexChanged += NotesField_SelectedIndexChanged;
+                    listBox.Dock = DockStyle.Fill;
+                    listBox.Name = "listBox" + ((sender as TabControl).SelectedIndex + 1);
+
+                    (sender as TabControl).SelectedTab.Text = addNewTab.NewName;
+                    (sender as TabControl).SelectedTab.Controls.Add(listBox);
+
+                    (sender as TabControl).Controls.Add(tabPage);
+
+                    types.Add(addNewTab.NewName, (sender as TabControl).SelectedIndex + 1);
+                }
+                else
+                    (sender as TabControl).SelectedIndex -= 1;
+            }
             else
+            {
                 ShowNotes(types[Fields.SelectedTab.Text]);
-            NotesField_SelectedIndexChanged(sender, e);
+                NotesField_SelectedIndexChanged(sender, e);
+            }
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
