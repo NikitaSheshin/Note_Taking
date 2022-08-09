@@ -17,19 +17,7 @@ namespace Note_Taking_WinForms
 
         public Data(string fileName)
         {
-            allNotes = new List<Note>();
-
-            var options = new JsonSerializerOptions
-            {
-                WriteIndented = true,
-                IncludeFields = true
-            };
-            using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate))
-            {
-                allNotes = JsonSerializer.Deserialize<List<Note>>(fs, options);
-                if (allNotes == null)
-                    allNotes = new List<Note>();
-            }
+            allNotes = Open.OpenNotesFromJson.ReadFile(fileName);
         }
 
         public bool AddNote(Note note)
@@ -72,14 +60,7 @@ namespace Note_Taking_WinForms
 
         public void SaveChanges(string fileName)
         {
-            var options = new JsonSerializerOptions
-            {
-                WriteIndented = true,
-                IncludeFields = true
-            };
-
-            string json = JsonSerializer.Serialize(allNotes, options);
-            File.WriteAllText(fileName, json);
+            Save.SaveNotesToJson.WriteToFile(fileName, AllNotes);
         }
     }
 }

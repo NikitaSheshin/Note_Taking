@@ -14,7 +14,9 @@ namespace Note_Taking_WinForms
 {
     public partial class MainForm : Form
     {
-        const string FileName = "State.json";
+        const string FileNameForNotes = "State.json";
+        const string FileNameForTypes = "Types.json";
+ 
         public enum ActionType { Add, Show, Change };
 
         Dictionary<string, string> weekDays = new Dictionary<string, string>()
@@ -120,8 +122,17 @@ namespace Note_Taking_WinForms
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            data = new Data(FileName);
+            data = new Data(FileNameForNotes);
             ShowNotes(types[Fields.SelectedTab.Text]);
+            AddTags();
+        }
+
+        private void AddTags()
+        {
+            types = Open.OpenTypesFromJson.ReadFile(FileNameForTypes);
+
+            for (int i = 5; i < types.Count; i++)
+                AddOneTab(types.Keys.ToList()[i], i + 1);
         }
 
         private void Sort(object sender, EventArgs e)
@@ -140,6 +151,22 @@ namespace Note_Taking_WinForms
         }
         
 
+        private void AddOneTab(string nameForNewTab, int index)
+        {
+            TabPage tabPage = new TabPage();
+            tabPage.Text = "+";
+
+            ListBox listBox = new ListBox();
+            listBox.SelectedIndexChanged += NotesField_SelectedIndexChanged;
+            listBox.Dock = DockStyle.Fill;
+            listBox.Name = "listBox" + index;
+
+            Fields.Controls[index - 1].Text = nameForNewTab;
+            Fields.Controls[index - 1].Controls.Add(listBox);
+
+            Fields.Controls.Add(tabPage);
+        }
+
         private void Fields_SelectedIndexChanged(object sender, EventArgs e)
         {
             if ((sender as TabControl).SelectedTab.Text == "+")
@@ -148,20 +175,8 @@ namespace Note_Taking_WinForms
 
                 if (addNewTab.ShowDialog() == DialogResult.OK)
                 {
-                    TabPage tabPage = new TabPage();
-                    tabPage.Text = "+";
-
-                    ListBox listBox = new ListBox();
-                    listBox.SelectedIndexChanged += NotesField_SelectedIndexChanged;
-                    listBox.Dock = DockStyle.Fill;
-                    listBox.Name = "listBox" + ((sender as TabControl).SelectedIndex + 1);
-
-                    (sender as TabControl).SelectedTab.Text = addNewTab.NewName;
-                    (sender as TabControl).SelectedTab.Controls.Add(listBox);
-
-                    (sender as TabControl).Controls.Add(tabPage);
-
-                    types.Add(addNewTab.NewName, (sender as TabControl).SelectedIndex + 1);
+                    AddOneTab(addNewTab.NewName, Fields.SelectedIndex + 1);
+                    types.Add(addNewTab.NewName, Fields.SelectedIndex + 1);
                 }
                 else
                     (sender as TabControl).SelectedIndex -= 1;
@@ -175,7 +190,8 @@ namespace Note_Taking_WinForms
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            data.SaveChanges(FileName);
+            data.SaveChanges(FileNameForNotes);
+            Save.SaveTypesToJson.WriteToFile(FileNameForTypes, types);
         }
     }
 }

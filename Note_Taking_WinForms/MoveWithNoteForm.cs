@@ -44,25 +44,25 @@ namespace Note_Taking_WinForms
             TypeBox.Items.Add("");
             TypeBox.Items.AddRange((from type in types
                                     where type != "Все" && type != "Без темы" 
-                             select type).ToArray());
+                                    select type).ToArray());
         }
 
         private void ExitClick(object sender, EventArgs e)
         {
-            newNote.Text = ContentTextBox.Text;
-
-            
             if (NameTextBox.Text == "")
-                newNote.Name = "Без названия";
+                MessageBox.Show("Нельзя создать заметку без названия");
             else
+            {
                 newNote.Name = NameTextBox.Text;
+                newNote.Text = ContentTextBox.Text;
 
-            if (TypeBox.Text == "")
-                newNote.Type = "Без темы";
-            else
-                newNote.Type = TypeBox.Text;
-            DialogResult = DialogResult.OK;
-            this.Close();
+                if (TypeBox.Text == "")
+                    newNote.Type = "Без темы";
+                else
+                    newNote.Type = TypeBox.Text;
+                DialogResult = DialogResult.OK;
+                this.Close();
+            }
         }
     }
 }
